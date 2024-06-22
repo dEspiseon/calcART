@@ -65,7 +65,7 @@ function processData(clientdistance, heightSelf, heightTarget, rangeStep, jsonDa
         return { elevation };
     } else {
         
-        return { error: 'Данные для расстояния не найдены' };
+        return { error: 'Данные для расчета элевации неверные' };
     }
 }
 
