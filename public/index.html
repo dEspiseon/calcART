@@ -7,33 +7,43 @@
     <!-- Подключение Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h2 {
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .result {
-            margin-bottom: 20px;
-        }
-        .error {
-            color: red;
-        }
-        footer {
-            text-align: center;
-            padding: 10px;
-            background-color: #f8f9fa;
-            margin-top: auto; /* подвал всегда внизу */
-            width: 100%; /* чтобы подвал был по ширине контейнера */
-            position: fixed;
-            bottom: 0;
-            left: 0;
-        }
-    </style>
+      body {
+          font-family: Arial, sans-serif;
+          margin: 20px;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh; /* чтобы подвал всегда был внизу страницы */
+          position: relative; /* чтобы подвал можно было абсолютно позиционировать относительно body */
+      }
+      h2 {
+          margin-bottom: 20px;
+      }
+      .form-group {
+          margin-bottom: 15px;
+      }
+      .result {
+          margin-bottom: 20px;
+      }
+      .error {
+          color: red;
+      }
+      /* Стили для подвала */
+      footer {
+          text-align: center;
+          padding: 10px;
+          background-color: #f8f9fa;
+          width: 100%; /* чтобы подвал был по ширине контейнера */
+          position: absolute;
+          bottom: 0;
+          left: 0;
+      }
+      @media (max-width: 576px) {
+          footer {
+              position: static; /* если мешает на мобильных, делаем позицию обычной */
+              margin-top: 20px; /* добавляем отступ сверху, чтобы не сливался с контентом */
+          }
+      }
+  </style>
 </head>
 <body>
     <div class="container">
@@ -147,7 +157,7 @@
         };
     </script>
         <footer>
-          Сделано Горелым и ДеспиковsымА. А. специально для  <a href="https://discord.gg/PPejvNZ4qk">RED</a>
+          Сделано Горелым и Деспиковым А. А. специально для  <a href="https://discord.gg/PPejvNZ4qk">RED</a>
       </footer>
 </body>
 </html>
