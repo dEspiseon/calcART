@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Калькулятор стрельбы</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="/path/to/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <h2>Калькулятор стрельбы</h2>
     <form>
-        <label for="distance">Расстояние (м):</label>
-        <input type="number" id="distance" name="distance" required><br><br>
+        <label for="clientdistance">Расстояние (м):</label>
+        <input type="number" id="clientdistance" name="clientdistance" required><br><br>
         
         <label for="heightSelf">Высота своя (м):</label>
         <input type="number" id="heightSelf" name="heightSelf" required><br><br>
@@ -25,10 +27,15 @@
         <div id="userDataContainer"></div>
     </form>
 
+    <!-- Подключение jQuery, Popper.js и Bootstrap JS с отложенной загрузкой -->
+    <script src="/path/to/jquery.min.js" defer></script>
+    <script src="/path/to/popper.min.js" defer></script>
+    <script src="/path/to/bootstrap.min.js" defer></script>
+
     <script>
         // Функция для отправки данных на сервер и получения результата
         function sendData() {
-            const distance = document.getElementById('distance').value;
+            const clientdistance = document.getElementById('clientdistance').value;
             const heightSelf = document.getElementById('heightSelf').value;
             const heightTarget = document.getElementById('heightTarget').value;
             const rangeStep = document.getElementById('rangeStep').value;
@@ -42,7 +49,7 @@
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         const response = JSON.parse(xhr.responseText);
-                        displayUserData(response); // Вызываем функцию для отображения данных
+                        displayUserData(response.results); // Вызываем функцию для отображения данных
                     } else {
                         console.error('Ошибка при отправке данных.');
                     }
@@ -50,7 +57,7 @@
             };
 
             // Отправляем данные в формате JSON
-            xhr.send(JSON.stringify({ distance, heightSelf, heightTarget, rangeStep }));
+            xhr.send(JSON.stringify({ clientdistance, heightSelf, heightTarget, rangeStep }));
         }
 
         // Функция для отображения данных на странице
@@ -58,16 +65,28 @@
             const userDataContainer = document.getElementById('userDataContainer');
             userDataContainer.innerHTML = ''; // Очищаем контейнер перед отображением новых данных
 
-            // Создаем элементы для отображения данных
-            const tenthPartElement = document.createElement('p');
-            tenthPartElement.textContent = `Десятая часть дальности: ${userData.tenthPart}`;
+            // Сортировка результатов по имени файла без расширения (h0, h1, h2)
+            userData.sort((a, b) => {
+                const fileA = a.file.toLowerCase();
+                const fileB = b.file.toLowerCase();
+                if (fileA < fileB) return -1;
+                if (fileA > fileB) return 1;
+                return 0;
+            });
 
-            // Добавляем элементы в контейнер
-            userDataContainer.appendChild(tenthPartElement);
+            userData.forEach((data, index) => {
+                const resultElement = document.createElement('p');
+                if (data.error) {
+                    resultElement.textContent = `${data.file}: ${data.error}`;
+                } else {
+                    resultElement.textContent = `${data.file}: Элевация: ${data.elevation}`;
+                }
+                userDataContainer.appendChild(resultElement);
+            });
         }
 
         // Добавляем обработчики событий на изменение каждого поля
-        document.getElementById('distance').addEventListener('input', sendData);
+        document.getElementById('clientdistance').addEventListener('input', sendData);
         document.getElementById('heightSelf').addEventListener('input', sendData);
         document.getElementById('heightTarget').addEventListener('input', sendData);
         document.getElementById('rangeStep').addEventListener('change', sendData);

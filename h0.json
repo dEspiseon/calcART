@@ -1,0 +1,11 @@
+[
+    {"distance": 100, "sight": 1505, "height_adjustment": null},
+    {"distance": 150, "sight": 1457, "height_adjustment": 11},
+    {"distance": 200, "sight": 1407, "height_adjustment": 16},
+    {"distance": 250, "sight": 1355, "height_adjustment": 21},
+    {"distance": 300, "sight": 1301, "height_adjustment": 27},
+    {"distance": 350, "sight": 1214, "height_adjustment": 35},
+    {"distance": 400, "sight": 1176, "height_adjustment": 46},
+    {"distance": 450, "sight": 1099, "height_adjustment": 64},
+    {"distance": 500, "sight": 998, "height_adjustment": 97}
+]
