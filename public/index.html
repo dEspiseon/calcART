@@ -1,84 +1,81 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Таблица 5x4</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор стрельбы</title>
 </head>
 <body>
+    <h2>Калькулятор стрельбы</h2>
+    <form>
+        <label for="distance">Расстояние (м):</label>
+        <input type="number" id="distance" name="distance" required><br><br>
+        
+        <label for="heightSelf">Высота своя (м):</label>
+        <input type="number" id="heightSelf" name="heightSelf" required><br><br>
+        
+        <label for="heightTarget">Высота цели (м):</label>
+        <input type="number" id="heightTarget" name="heightTarget" required><br><br>
+        
+        <label for="rangeStep">Ступень дальности:</label>
+        <select id="rangeStep" name="rangeStep" required>
+            <option value="50">50 м</option>
+            <option value="100">100 м</option>
+        </select><br><br>
+        <div id="userDataContainer"></div>
+    </form>
 
-<input type="text" id="inputField" placeholder="Введите расстояние">
-<input type="text" id="height1" placeholder="Введите свою высоту">
-<input type="text" id="height2" placeholder="Введите высоту цели">
-<button id="heightresult">Найти высоту</button>
+    <script>
+        // Функция для отправки данных на сервер и получения результата
+        function sendData() {
+            const distance = document.getElementById('distance').value;
+            const heightSelf = document.getElementById('heightSelf').value;
+            const heightTarget = document.getElementById('heightTarget').value;
+            const rangeStep = document.getElementById('rangeStep').value;
 
+            // Создаем AJAX запрос
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
 
-<table id="data-table">
-  <tr>
-    <th>Расстояние</th>
-    <th>Прицел</th>
-    <th>Поправка</th>
-    <th>Ветер</th>
-  </tr>
-  <tr>
-    <td>100</td>
-    <td>1505</td>
-    <td>0</td>
-    <td>2.6</td>
-  </tr>
-  <tr>
-    <td>150</td>
-    <td>1457</td>
-    <td>11</td>
-    <td>1.8</td>
-  </tr>
-  <tr>
-    <td>200</td>
-    <td>1407</td>
-    <td>16</td>
-    <td>1.3</td>
-  </tr>
-  <tr>
-    <td>250</td>
-    <td>1355</td>
-    <td>21</td>
-    <td>1.1</td>
-  </tr>
-  <tr>
-    <td>300</td>
-    <td>1301</td>
-    <td>27</td>
-    <td>0.9</td>
-  </tr>
-  <tr>
-    <td>350</td>
-    <td>1241</td>
-    <td>35</td>
-    <td>0.8</td>
-  </tr>
-  <tr>
-    <td>400</td>
-    <td>1176</td>
-    <td>46</td>
-    <td>0.7</td>
-  </tr>
-  <tr>
-    <td>450</td>
-    <td>1099</td>
-    <td>64</td>
-    <td>0.6</td>
-  </tr>
-  <tr>
-    <td>500</td>
-    <td>998</td>
-    <td>97</td>
-    <td>0.5</td>
-  </tr>
-</table>
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        const response = JSON.parse(xhr.responseText);
+                        displayUserData(response); // Вызываем функцию для отображения данных
+                    } else {
+                        console.error('Ошибка при отправке данных.');
+                    }
+                }
+            };
 
-<div id="output"></div>
-<script src="./scripttest.js"></script>
-<!--<script src="./calc.js"></script>-->
+            // Отправляем данные в формате JSON
+            xhr.send(JSON.stringify({ distance, heightSelf, heightTarget, rangeStep }));
+        }
+
+        // Функция для отображения данных на странице
+        function displayUserData(userData) {
+            const userDataContainer = document.getElementById('userDataContainer');
+            userDataContainer.innerHTML = ''; // Очищаем контейнер перед отображением новых данных
+
+            // Создаем элементы для отображения данных
+            const tenthPartElement = document.createElement('p');
+            tenthPartElement.textContent = `Десятая часть дальности: ${userData.tenthPart}`;
+
+            // Добавляем элементы в контейнер
+            userDataContainer.appendChild(tenthPartElement);
+        }
+
+        // Добавляем обработчики событий на изменение каждого поля
+        document.getElementById('distance').addEventListener('input', sendData);
+        document.getElementById('heightSelf').addEventListener('input', sendData);
+        document.getElementById('heightTarget').addEventListener('input', sendData);
+        document.getElementById('rangeStep').addEventListener('change', sendData);
+
+        // Вызываем отправку данных при загрузке страницы
+        window.onload = function() {
+            sendData(); // Отправляем данные на сервер при загрузке страницы
+        };
+    </script>
 </body>
 </html>
